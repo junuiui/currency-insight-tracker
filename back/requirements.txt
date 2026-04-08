@@ -1,0 +1,2 @@
+boto3        # AWS Services (DynamoDB ...)
+requests     # For external API
