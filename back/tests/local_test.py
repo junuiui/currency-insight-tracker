@@ -14,8 +14,8 @@ except ImportError as e:
     print(f"Import Failed: {e}")
     sys.exit(1)
 
-# 가상의 AWS 이벤트 생성
-mock_event = {'base': 'CAD'}
+# mock aws event
+mock_event = {'base': 'USD'}
 mock_context = None
 
 print("--- Local Test Start ---")
