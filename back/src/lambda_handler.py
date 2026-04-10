@@ -1,37 +1,50 @@
 import json
 import requests
 import os
-import boto3 # aws python SDK
+import boto3 # aws python SDK'
+from botocore.exceptions import ClientError
 from datetime import datetime
+from dotenv import load_dotenv
 
-dynamodb = boto3.resource('dynamodb', region_name='us-west-2')
-table = dynamodb.Table('CurrencyRates')
+load_dotenv()
+
+REGION = os.environ.get('AWS_REGION_NAME')
+TABLE_NAME = os.environ.get('DYNAMODB_TABLE')
+TARGET_CURRENCIES = os.environ.get('TARGET_CURRENCIES', '').split(',')
+
+dynamodb = boto3.resource('dynamodb', REGION)
+table = dynamodb.Table(TABLE_NAME)
 
 print("DYNAMODB:", table)
 
 def save_to_db(base, rates, date):
-  """
-  From the passed data, store it in db
-  """
-  
   print("LOG: save_to_db CALLED")
-  # Target Country lists
-  target_currencies = ['KRW', 'USD', 'CAD', 'JPY', 'EUR']
   
-  with table.batch_writer() as batch:
-    for target in target_currencies:
-      if target in rates:
-        batch.put_item(
-          Item={
-            'CurrencyPair': f"{base}_{target}", # Partition Key (ex: CAD_KRW)
-            'Date': date,                       # Sort Key (ex: 2026-04-10)
-            'Rate': str(rates[target]),
-            'UpdatedAt': datetime.now().isoformat()
-          }
-        )
-        
-  print("LOG: save_to_db DONE")
+  for target in TARGET_CURRENCIES:
+    if target in rates:
+      try:
+        table.put_item(
+            Item={
+                'CurrencyPair': f"{base}_{target}",
+                'Date': date,
+                'Rate': str(rates[target]),
+                'UpdatedAt': datetime.now().isoformat()
+            },
 
+            ConditionExpression='attribute_not_exists(CurrencyPair) AND attribute_not_exists(#d)',
+            ExpressionAttributeNames={'#d': 'Date'}
+        )
+        print(f"Saved: {base}_{target}")
+        
+      except ClientError as e:
+        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            print(f"Skip: Data already exists for {base}_{target} on {date}")
+        else:
+            print(f"AWS Error: {e.response['Error']['Message']}")
+            raise e
+                  
+  print("LOG: save_to_db DONE")
+    
 def lambda_handler(event, context):
   print("-----Lambda Called-----")
   """
