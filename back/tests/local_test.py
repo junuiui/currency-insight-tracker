@@ -1,21 +1,21 @@
-from lambda_handler import lambda_handler
 import sys
 import os
 
 # src 폴더를 경로에 추가
 current_dir = os.path.dirname(os.path.abspath(__file__))
-src_path = os.path.join(current_dir, '..', 'src')
-sys.path.append(src_path)
+src_path = os.path.abspath(os.path.join(current_dir, '..', 'src'))
+sys.path.insert(0, src_path)
 
 try:
     from lambda_handler import lambda_handler
     print("Import Successful!")
 except ImportError as e:
     print(f"Import Failed: {e}")
+    print(f"Current sys.path: {sys.path}")
     sys.exit(1)
 
 # mock aws event
-mock_event = {'base': 'USD'}
+mock_event = {'base': 'CAD'}
 mock_context = None
 
 print("--- Local Test Start ---")
