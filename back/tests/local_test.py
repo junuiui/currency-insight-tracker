@@ -1,5 +1,10 @@
 import sys
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DEFAULT_BASE_CURRENCY = os.environ.get('DEFAULT_BASE')
 
 # src 폴더를 경로에 추가
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +20,7 @@ except ImportError as e:
     sys.exit(1)
 
 # mock aws event
-mock_event = {'base': 'CAD'}
+mock_event = {'base': DEFAULT_BASE_CURRENCY}
 mock_context = None
 
 print("--- Local Test Start ---")
