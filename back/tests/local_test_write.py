@@ -13,7 +13,7 @@ src_path = os.path.abspath(os.path.join(current_dir, '..', 'src'))
 sys.path.insert(0, src_path)
 
 try:
-    from lambda_handler import lambda_handler
+    from write_rates_handler import lambda_handler
     print("Import Successful!")
 except ImportError as e:
     print(f"Import Failed: {e}")
