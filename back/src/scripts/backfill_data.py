@@ -15,7 +15,7 @@ if src_path not in sys.path:
   sys.path.insert(0, src_path)
 
 try:
-  from lambda_handler import save_to_db
+  from write_rates_handler import save_to_db
   print("Import Successful!")
 except ImportError as e:
   print(f"Import Failed: {e}")
