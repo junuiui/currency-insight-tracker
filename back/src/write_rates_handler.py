@@ -50,10 +50,10 @@ def save_to_db(base, rates, date):
 def lambda_handler(event, context):
     print("-----Lambda Called-----")
     """
-  AWS Lambda Entry Point Function  
-  :param event: Sent data   
-  :param context: call env info  
-  """
+    AWS Lambda Entry Point Function  
+    :param event: Sent data   
+    :param context: call env info  
+    """
 
     # set base currency, default = CAD
     base_input = event.get("base", "CAD")
