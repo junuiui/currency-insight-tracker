@@ -48,23 +48,19 @@ def save_to_db(base, rates, date):
 
 
 def lambda_handler(event, context):
-    print("-----Lambda Called-----")
+    print(f"----- Lambda Started: Monitoring {TARGET_CURRENCIES} -----")
     """
     AWS Lambda Entry Point Function  
     :param event: Sent data   
     :param context: call env info  
     """
 
-    # set base currency, default = CAD
-    base_input = event.get("base", "CAD")
-    base_currencies = base_input if isinstance(base_input, list) else [base_input]
-
     # for logs
     logs = []
 
     has_error = False
 
-    for base in base_currencies:
+    for base in TARGET_CURRENCIES:
         api_url = f"https://api.frankfurter.app/latest?from={base}"
 
         try:
