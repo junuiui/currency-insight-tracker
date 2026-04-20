@@ -18,9 +18,10 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event, context):
 
-    # Get param (USD_KRW, 7)
-    pair = event.get("pair", "USD_KRW")
-    days = int(event.get("days", 7))
+    # Get param (deafult: USD_KRW, 7)
+    query_params = event.get("queryStringParameters", {})
+    pair = query_params.get("pair") or event.get("pair", "USD_KRW")
+    days = int(query_params.get("days") or event.get("days", 30))
 
     end_date = datetime.now().strftime("%Y-%m-%d")
     start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
