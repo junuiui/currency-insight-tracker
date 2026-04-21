@@ -102,14 +102,29 @@ function App() {
                             {loading ? (
                                 <div className="text-center py-20 text-xs text-gray-400">Loading...</div>
                             ) : data.length > 0 ? (
-                                data.map((item) => (
-                                    <div key={item.Date} className="flex justify-between items-center px-3 py-2 bg-gray-50 border border-gray-100 rounded text-xs">
-                                        <span className="font-mono text-gray-500">{item.Date}</span>
-                                        <span className="font-bold">{item.Rate}</span>
-                                    </div>
-                                ))
+                                // 리스트는 최신 데이터를 위로 보여주는 것이 보통 더 직관적입니다.
+                                [...data].reverse().map((item) => {
+                                    const numericRate = typeof item.Rate === 'string'
+                                        ? parseFloat(item.Rate.replace(/,/g, ''))
+                                        : item.Rate;
+
+                                    // 숫자가 1보다 작으면 소수점 6자리, 크면 2자리 + 콤마 처리
+                                    const displayRate = numericRate < 1
+                                        ? numericRate.toFixed(6)
+                                        : numericRate.toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        });
+
+                                    return (
+                                        <div key={item.Date} className="flex justify-between items-center px-3 py-2 bg-gray-50 border border-gray-100 rounded text-xs">
+                                            <span className="font-mono text-gray-500">{item.Date}</span>
+                                            <span className="font-bold text-gray-900">{displayRate}</span>
+                                        </div>
+                                    );
+                                })
                             ) : (
-                                <div className="text-center py-20 text-xs text-gray-400">No data</div>
+                                <div className="text-center py-20 text-xs text-gray-400">No data found.</div>
                             )}
                         </div>
                     </div>
@@ -123,6 +138,10 @@ function App() {
                             <HistoryChart data={data} />
                         </div>
                     </div>
+                </div>
+
+                <div className="flex-1 w-full">
+                    <HistoryChart data={data} />
                 </div>
 
                 <footer className="text-center pt-8 text-[10px] text-gray-400 font-mono">
