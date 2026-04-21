@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ConverterComponent from './components/converter.component';
 
 interface RateData {
     Date: string;
@@ -149,12 +150,20 @@ function App() {
                         )}
                     </div>
                 </div>
+
+                <div>
+                    <ConverterComponent from={baseCurrency} to={targetCurrency} data={data} />
+                </div>
             </div>
 
             <footer className="text-center mt-12 text-xs text-gray-400 font-mono">
                 Junui Hong
             </footer>
+
+
         </div>
+
+
     )
 }
 
