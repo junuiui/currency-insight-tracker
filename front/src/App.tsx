@@ -13,102 +13,122 @@ function App() {
 
     const currencies = ['CAD', 'USD', 'KRW', 'EUR', 'JPY'];
 
+    // Swap Logic
+    const handleBaseChange = (newBase: string) => {
+        if (newBase === targetCurrency) setTargetCurrency(baseCurrency);
+        setBaseCurrency(newBase);
+    };
+
+    const handleTargetChange = (newTarget: string) => {
+        if (newTarget === baseCurrency) setBaseCurrency(targetCurrency);
+        setTargetCurrency(newTarget);
+    };
+
     return (
-        <div className="p-8 bg-white min-h-screen text-gray-900">
-            <div className="max-w-4xl mx-auto border border-gray-200 rounded-md">
+        <div className="p-4 md:p-8 bg-white min-h-screen text-gray-900">
+            <div className="max-w-6xl mx-auto space-y-6">
 
-                {/* Header */}
-                <div className="p-5 border-b border-gray-200">
-                    <h1 className="text-xl font-bold">Currency History Tracker</h1>
-                </div>
-
-                <div className="flex flex-col md:flex-row">
-                    {/* Left: Controls */}
-                    <div className="w-full md:w-1/3 p-5 space-y-6 border-b md:border-b-0 md:border-r border-gray-200">
-                        <CurrencySelector
-                            label="From (Base)"
-                            selected={baseCurrency}
-                            currencies={currencies}
-                            onSelect={setBaseCurrency}
-                        />
-                        <CurrencySelector
-                            label="To (Target)"
-                            selected={targetCurrency}
-                            currencies={currencies}
-                            onSelect={setTargetCurrency}
-                        />
-
-                        {/* 날짜 선택 버튼 그룹 */}
-                        <div>
-                            <label className="block text-sm font-medium mb-1.5 text-gray-600">Period</label>
-                            <div className="grid grid-cols-2 gap-1.5">
-                                {[
-                                    { label: '7 Days', value: '7' },
-                                    { label: '1 Month', value: '30' },
-                                    { label: '6 Months', value: '180' },
-                                    { label: '1 Year', value: '365' }
-                                ].map((period) => (
-                                    <button
-                                        key={period.value}
-                                        onClick={() => setDays(period.value)}
-                                        className={`px-2 py-1.5 text-xs border rounded ${days === period.value ? 'bg-gray-200 border-gray-400 font-bold' : 'bg-white border-gray-200'}`}
-                                    >
-                                        {period.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1.5 text-gray-600">Last Days</label>
-                            <input
-                                type="number"
-                                value={days}
-                                onChange={(e) => setDays(e.target.value)}
-                                className='w-full border border-gray-200 p-2 text-sm rounded focus:outline-none focus:border-gray-900'
+                {/* 1. Header & From-To Selectors (Top) */}
+                <div className="border border-gray-200 rounded-md p-5 bg-white shadow-sm">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <h1 className="text-xl font-bold whitespace-nowrap">Currency Tracker</h1>
+                        <div className="flex flex-1 items-center gap-4 justify-end">
+                            <CurrencySelector
+                                label="From"
+                                selected={baseCurrency}
+                                currencies={currencies}
+                                onSelect={handleBaseChange}
+                            />
+                            <div className="text-gray-300 mt-5">→</div>
+                            <CurrencySelector
+                                label="To"
+                                selected={targetCurrency}
+                                currencies={currencies}
+                                onSelect={handleTargetChange}
                             />
                         </div>
                     </div>
+                </div>
 
-                    {/* Right: Results List */}
-                    <div className="w-full md:w-2/3 p-5">
-                        <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
-                            <h2 className="font-semibold text-gray-700">{baseCurrency} / {targetCurrency}</h2>
-                            <span className="text-xs text-gray-400 font-mono">Count: {data.length}</span>
-                        </div>
-
-                        {loading ? (
-                            <div className="text-center py-10 text-gray-500 text-sm">Loading...</div>
-                        ) : baseCurrency === targetCurrency ? (
-                            <div className="text-center py-10 text-gray-500 text-sm border border-dashed rounded bg-gray-50">
-                                Same currencies selected.
-                            </div>
-                        ) : data.length > 0 ? (
-                            <div className="space-y-1.5 max-h-80 overflow-y-auto pr-2">
-                                {data.map((item) => (
-                                    <div key={item.Date} className="flex justify-between items-center px-4 py-2 bg-gray-50 border border-gray-100 rounded text-sm">
-                                        <span className="font-mono text-gray-500">{item.Date}</span>
-                                        <span className="font-semibold text-gray-950">{item.Rate}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-10 text-gray-400 text-sm border border-dashed rounded">No data found.</div>
-                        )}
+                {/* 2. Period Selection (Sub-top) */}
+                <div className="flex flex-wrap items-center justify-center gap-4 p-4 border border-gray-200 rounded-md bg-gray-50">
+                    <div className="flex gap-1.5">
+                        {[
+                            { label: '7D', value: '7' },
+                            { label: '1M', value: '30' },
+                            { label: '6M', value: '180' },
+                            { label: '1Y', value: '365' }
+                        ].map((period) => (
+                            <button
+                                key={period.value}
+                                onClick={() => setDays(period.value)}
+                                className={`px-4 py-1.5 text-xs border rounded transition-colors ${days === period.value ? 'bg-gray-900 text-white border-gray-900' : 'bg-white border-gray-200 hover:bg-gray-100'}`}
+                            >
+                                {period.label}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-2 border-l pl-4 border-gray-300">
+                        <span className="text-xs font-medium text-gray-500">Custom Days:</span>
+                        <input
+                            type="number"
+                            value={days}
+                            onChange={(e) => setDays(e.target.value)}
+                            className="w-20 border border-gray-200 p-1 text-xs rounded focus:outline-none focus:border-gray-900"
+                        />
                     </div>
                 </div>
 
-                {/* Bottom: Converter */}
-                <div className="border-t border-gray-200">
-                    <ConverterComponent from={baseCurrency} to={targetCurrency} data={data} />
+                {/* 3. Converter (Middle Center) */}
+                <div className="flex justify-center">
+                    <div className="w-full max-w-2xl border border-gray-200 rounded-md shadow-sm overflow-hidden">
+                        <div className="bg-gray-50 px-4 py-2 text-xs font-bold border-b border-gray-200 text-center">
+                            CURRENCY CONVERTER
+                        </div>
+                        <ConverterComponent from={baseCurrency} to={targetCurrency} data={data} />
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <HistoryChart data={data} />
-            </div>
+                {/* 4. Bottom Section: List (Left) & Chart (Right) */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* List - 1/3 width */}
+                    <div className="lg:col-span-1 border border-gray-200 rounded-md p-5 flex flex-col h-[400px]">
+                        <div className="flex justify-between items-center mb-4 pb-2 border-b">
+                            <h2 className="font-semibold text-sm">{baseCurrency}/{targetCurrency} List</h2>
+                            <span className="text-[10px] text-gray-400 font-mono">n={data.length}</span>
+                        </div>
 
-            <footer className="text-center mt-12 text-xs text-gray-400 font-mono">Junui Hong</footer>
+                        <div className="flex-1 overflow-y-auto pr-2 space-y-1">
+                            {loading ? (
+                                <div className="text-center py-20 text-xs text-gray-400">Loading...</div>
+                            ) : data.length > 0 ? (
+                                data.map((item) => (
+                                    <div key={item.Date} className="flex justify-between items-center px-3 py-2 bg-gray-50 border border-gray-100 rounded text-xs">
+                                        <span className="font-mono text-gray-500">{item.Date}</span>
+                                        <span className="font-bold">{item.Rate}</span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-20 text-xs text-gray-400">No data</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Chart - 2/3 width */}
+                    <div className="lg:col-span-2 border border-gray-200 rounded-md p-5 bg-white shadow-sm flex flex-col h-[400px]">
+                        <div className="mb-4 pb-2 border-b">
+                            <h2 className="font-semibold text-sm">Trend Analysis</h2>
+                        </div>
+                        <div className="flex-1 w-full">
+                            <HistoryChart data={data} />
+                        </div>
+                    </div>
+                </div>
+
+                <footer className="text-center pt-8 text-[10px] text-gray-400 font-mono">
+                    DESIGNED BY JUNUI HONG • SFU SOFTWARE SYSTEMS
+                </footer>
+            </div>
         </div>
     );
 }
