@@ -139,11 +139,7 @@ function App() {
                         </div>
                     </div>
                 </div>
-
-                <div className="flex-1 w-full">
-                    <HistoryChart data={data} />
-                </div>
-
+                
                 <footer className="text-center pt-8 text-[10px] text-gray-400 font-mono">
                     DESIGNED BY JUNUI HONG • SFU SOFTWARE SYSTEMS
                 </footer>
