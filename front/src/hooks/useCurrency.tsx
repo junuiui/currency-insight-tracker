@@ -46,6 +46,7 @@ export function useCurrency() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchRates();
     }, [baseCurrency, targetCurrency, days]);
 
