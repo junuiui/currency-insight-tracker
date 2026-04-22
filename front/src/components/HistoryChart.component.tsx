@@ -7,7 +7,8 @@ import {
     Title,
     Tooltip,
     Legend,
-    Filler
+    Filler,
+    type TooltipItem,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -62,7 +63,19 @@ export default function HistoryChart({ data }: { data: RateData[] }) {
                 padding: 10,
                 displayColors: false,
                 callbacks: {
-                    label: (context: any) => `Rate: ${context.parsed.y.toFixed(7)}`
+                    // 툴팁 소수점 6자리 강제
+                    label: (context: TooltipItem<'line'>) => {
+                        const val = context.parsed.y;
+                        if (val) {
+                            const formatted = val < 1
+                                ? val.toFixed(6)
+                                : val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            return `Rate: ${formatted}`;
+                        }
+                        else {
+                            return `Rate: `
+                        }
+                    }
                 }
             }
         },
@@ -90,7 +103,11 @@ export default function HistoryChart({ data }: { data: RateData[] }) {
                 ticks: {
                     font: { size: 10 },
                     // Y축 눈금 소수점 6자리 해결 (0.00058 대응)
-                    callback: (value: any) => value.toFixed(7)
+                    callback: (tickValue: string | number) => {
+                        const numericValue = typeof tickValue === 'string' ? parseFloat(tickValue) : tickValue;
+                        if (numericValue < 1) return numericValue.toFixed(6);
+                        return numericValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    }
                 }
             }
         },
