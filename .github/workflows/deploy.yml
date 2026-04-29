@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # 모든 run 명령어의 기본 실행 경로를 front/ 폴더로 고정합니다.
+    environment: aws-currency
     defaults:
       run:
         working-directory: ./front
