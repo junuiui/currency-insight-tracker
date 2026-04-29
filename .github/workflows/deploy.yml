@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           # 캐시가 참조할 lock 파일 경로도 명시해줍니다.
           cache: 'npm'
           cache-dependency-path: './front/package-lock.json'
