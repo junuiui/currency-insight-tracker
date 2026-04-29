@@ -1,45 +1,52 @@
 name: Deploy Frontend to S3 and CloudFront
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
+    # 모든 run 명령어의 기본 실행 경로를 front/ 폴더로 고정합니다.
+    defaults:
+      run:
+        working-directory: ./front
 
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v6
-            
-            - name: Setup Node.js
-              uses: actions/setup-node@v6
-              with:
-                node-version: 24
-                # cache: npm
-            
-            - name: Install Dependencies
-              run: npm install
-            
-            - name: Build Project
-              run: npm run build
-              env:
-                VITE_API_URL: ${{ secrets.VITE_API_URL }}
-            
-            - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v6
-              with:
-                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                aws-region: ${{ secrets.AWS_REGION }}
-        
-            - name: Deploy to S3
-              run: |
-                aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
-    
-            - name: CloudFront Invalidation
-              run: |
-                aws cloudfront create-invalidation \
-                --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-                --paths "/*"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+          # 캐시가 참조할 lock 파일 경로도 명시해줍니다.
+          cache: 'npm'
+          cache-dependency-path: './front/package-lock.json'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to S3
+        # dist 폴더도 front/dist 안에 생기므로 경로를 맞춰줍니다.
+        run: |
+          aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
+
+      - name: CloudFront Invalidation
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
