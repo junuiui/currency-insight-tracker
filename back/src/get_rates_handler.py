@@ -3,12 +3,12 @@ import boto3
 import os
 from boto3.dynamodb.conditions import Key
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # #############
 # Setting
 # #############
-load_dotenv()
+# load_dotenv()
 
 REGION = os.environ.get("AWS_REGION_NAME")
 TABLE_NAME = os.environ.get("DYNAMODB_TABLE")
@@ -19,7 +19,7 @@ table = dynamodb.Table(TABLE_NAME)
 def lambda_handler(event, context):
 
     # Get param (deafult: USD_KRW, 7)
-    query_params = event.get("queryStringParameters", {})
+    query_params = event.get("queryStringParameters") or {}
     pair = query_params.get("pair") or event.get("pair", "USD_KRW")
     days = int(query_params.get("days") or event.get("days", 30))
 

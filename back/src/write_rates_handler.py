@@ -4,12 +4,12 @@ import os
 import boto3  # aws python SDK'
 from botocore.exceptions import ClientError
 from datetime import datetime
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # #############
 # Setting
 # #############
-load_dotenv()
+# load_dotenv()
 
 REGION = os.environ.get("AWS_REGION_NAME")
 TABLE_NAME = os.environ.get("DYNAMODB_TABLE")

@@ -238,3 +238,5 @@ override.tf.json
 
 # MacOS files
 .DS_Store
+
+*.zip
