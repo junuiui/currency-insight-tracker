@@ -1,4 +1,4 @@
-# Currency Insight Tracker
+# Currency Insight Tracker (v1 - serverless)
 > **Automated Serverless Exchange Rate Monitoring and Visualization System**
 
 This project is a fully automated, serverless web application designed to track, store, and visualize historical exchange rate data using an AWS cloud-native architecture.
@@ -59,3 +59,9 @@ The system utilizes an **Event-Driven Serverless Architecture** to ensure high s
 ## Todos
 1. Terraform Intergration (Migrate from Manual to Terraform automation)
 2. Build CI/CD
+
+
+---
+
+## Notes
+Check out [Currency Insight Tracker v2](https://github.com/junuiui/currency-insight-tracker-v2)
