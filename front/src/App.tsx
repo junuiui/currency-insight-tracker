@@ -31,7 +31,7 @@ function App() {
                 {/* 1. Header & From-To Selectors (Top) */}
                 <div className="border border-gray-200 rounded-md p-5 bg-white shadow-sm">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <h1 className="text-xl font-bold whitespace-nowrap">Currency Tracker</h1>
+                        <h1 className="text-xl font-bold whitespace-nowrap">Currency Tracker v1</h1>
                         <div className="flex flex-1 items-center gap-4 justify-end">
                             <CurrencySelector
                                 label="From"
