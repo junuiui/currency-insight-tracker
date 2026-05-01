@@ -92,7 +92,7 @@ function App() {
                 {/* 4. Bottom Section: List (Left) & Chart (Right) */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* List - 1/3 width */}
-                    <div className="lg:col-span-1 border border-gray-200 rounded-md p-5 flex flex-col h-[400px]">
+                    <div className="lg:col-span-1 border border-gray-200 rounded-md p-5 flex flex-col h-100">
                         <div className="flex justify-between items-center mb-4 pb-2 border-b">
                             <h2 className="font-semibold text-sm">{baseCurrency}/{targetCurrency} List</h2>
                             <span className="text-[10px] text-gray-400 font-mono">n={data.length}</span>
@@ -130,7 +130,7 @@ function App() {
                     </div>
 
                     {/* Chart - 2/3 width */}
-                    <div className="lg:col-span-2 border border-gray-200 rounded-md p-5 bg-white shadow-sm flex flex-col h-[400px]">
+                    <div className="lg:col-span-2 border border-gray-200 rounded-md p-5 bg-white shadow-sm flex flex-col h-100">
                         <div className="mb-4 pb-2 border-b">
                             <h2 className="font-semibold text-sm">Trend Analysis</h2>
                         </div>
