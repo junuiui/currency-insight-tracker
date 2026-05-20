@@ -54,5 +54,10 @@ The project has evolved from manual AWS console configuration to a mature **DevO
 
 ---
 
+## Diagram
+![v1 Diagram](public/v1_diagram.jpg)
+
+---
+
 ## Notes
 Check out [Currency Insight Tracker v2](https://github.com/junuiui/currency-insight-tracker-v2)
